@@ -1,33 +1,8 @@
-# Django settings for celery_sample project.
 import os
-#import djcelery
-#djcelery.setup_loader()
-#BROKER_URL = 'amqp://guest:guest@localhost:5672/'
-#CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-#CELERY_RESULT_BACKEND = "database"
-#CELERY_IMPORTS = ("app.tasks", )
-#CELERY_WORKER_DIRECT = True
-#CELERY_ROUTES = {'tasks.add': {'queue': 'ADD_QUEUE'}}
-#CELERY_ALWAYS_EAGER = True
-#from datetime import timedelta
-#
-##CELERYBEAT_SCHEDULE = {
-##    'add-every-30-seconds': {
-##        'task': 'app.tasks.add',
-##        'schedule': timedelta(seconds=30),
-##        'args': (16, 16)
-##    },
-##}
-
-#CELERY_ROUTES = {
-#    'tasks.user_task': {'queue': 'calendar_iserviceglobe.net', 'routing_key': 'calendar_iserviceglobe.net'},
-#    'tasks.user_task': {'queue': 'calendar_iserviceglobe.com', 'routing_key': 'calendar_iserviceglobe.com'}
-#}
 
 PROJECT_DIR, PROJECT_MODULE_NAME = os.path.split(
     os.path.dirname(os.path.realpath(__file__))
 )
-CELERY_TIMEZONE = 'UTC'
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -40,7 +15,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'test_celery1',                      # Or path to database file if using sqlite3.
+        'NAME': 'django_google_plus',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -95,6 +70,11 @@ STATIC_URL = '/static/'
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+#    'staticfiles.context_processors.static_url',
+    'django.core.context_processors.request',
+)
+
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -145,14 +125,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-#    'app',
-#    'djcelery',
     'django_google_plus',
-#    'django_google_plus'
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -18,11 +18,6 @@ class OpenIDBackend:
             return None
 
     def authenticate(self, **kwargs):
-        """Authenticate the user based on an OpenID response."""
-        # Require that the OpenID response be passed in as a keyword
-        # argument, to make sure we don't match the username/password
-        # calling conventions of authenticate.
-
         credentials = kwargs.get('credentials_obj')
         if credentials is None:
             return None
@@ -81,6 +76,8 @@ class OpenIDBackend:
 
         user = User.objects.create_user(username, email, password=None)
         self.update_user_details(user, details)
+        UserGoogleID.objects.create(
+                googleplus_id=user_details.get('id'), user=user)
         self.associate_credentials(user, credentials)
         return user
 
