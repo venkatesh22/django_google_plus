@@ -4,4 +4,6 @@
 .project
 .settings/
 pip-log.txt
-
+*.db
+build/
+*.egg-info

@@ -12,10 +12,11 @@ import conf
 
 conf.GOOGLE_CLIENT_SECRET = "ExIY6cALk7pLiMgjwI5e1cLP"
 conf.GOOGLE_CLIENT_ID = "417231516741-8sc7fgf5u3df29iferkjivglltrd9jaj.apps.googleusercontent.com"
+conf.GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/openid/complete'
 flow = OAuth2WebServerFlow(client_id=conf.GOOGLE_CLIENT_ID,
                            client_secret=conf.GOOGLE_CLIENT_SECRET,
                            scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email',
-                           redirect_uri='http://example.com/auth_return')
+                           redirect_uri=conf.GOOGLE_REDIRECT_URI)
 #CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), 'client_secrets.json')
 #flow = flow_from_clientsecrets(
 #        CLIENT_SECRETS,
@@ -33,45 +34,48 @@ def default_render_failure(request, message, status=403,
 
 @csrf_exempt
 def login_begin(request, template_name='google_plus/login.html',
-                redirect_uri=None,
-                domain='iserviceglobe.net',
+                domain=None,
                 scopes=None,
+                redirect_field_name=REDIRECT_FIELD_NAME,
                 render_failure=default_render_failure):
 
-    if request.user.is_authenticated():
-        return HttpResponseRedirect('/home')
+    redirect_to = request.REQUEST.get(redirect_field_name, '')
+    request.session['next'] = redirect_to
 
     if 'error' in request.GET:
         return render_failure(request, 'access_denied')
 
-    if request.method == "POST":
-        try:
-            redirect_uri = 'http://127.0.0.1:8000/complete'
-            if flow.client_id is None and flow.client_secret is None:
-                return render_failure(request, 'client_id and client secret required')
-            if domain is not None:
-                flow.hd = domain
-            if scopes is not None:
-                flow.scope = scopes
-            auth_uri = flow.step1_get_authorize_url(redirect_uri=redirect_uri)
-            return HttpResponseRedirect(auth_uri)
-        except FlowExchangeError:
-            return render_failure(request, 'Error')
-    c = RequestContext(request, {})
-    return render_to_response(template_name, context_instance=c)
+    try:
+        if flow.client_id is None:
+            return render_failure(request, 'client_id required')
+        if flow.client_secret is None:
+            return render_failure(request, 'client secret required')
+        if flow.redirect_uri is None:
+            return render_failure(request, 'redirect uri required')
+        if domain is not None:
+            flow.hd = domain
+        if scopes is not None:
+            flow.scope = scopes
+        auth_uri = flow.step1_get_authorize_url()
+        return HttpResponseRedirect(auth_uri)
+    except FlowExchangeError:
+        return render_failure(request, 'Error')
 
 
 @csrf_exempt
 def login_complete(request, redirect_field_name=REDIRECT_FIELD_NAME,
                    render_failure=default_render_failure):
+
+    redirect_to = request.session.get('next')
+
     code = request.GET.get('code')
     credentials = flow.step2_exchange(code)
-    domain = credentials.id_token.get('hd', None)
+#    domain = credentials.id_token.get('hd', None)
     user = authenticate(credentials_obj=credentials)
     if user is not None:
         if user.is_active:
             auth_login(request, user)
-            return HttpResponseRedirect('/home')
+            return HttpResponseRedirect(redirect_to)
         else:
             return render_failure(request, 'Disabled account')
     else:

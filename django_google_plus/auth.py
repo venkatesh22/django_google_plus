@@ -35,8 +35,12 @@ class GoogleAuthBackend:
             user_openid = UserGoogleID.objects.get(
                 googleplus_id__exact=user_details.get('id'))
         except UserGoogleID.DoesNotExist:
-#            if conf.CREATE_USERS:
-            user = self.create_user_from_google(user_details, credentials)
+            if conf.CREATE_USERS:
+                email = user_details.get('emails')[0].get('value')
+                domain = email.split('@')[1]
+                if not conf.CREATE_GMAIL_USERS and domain == "gmail.com":
+                    return None
+                user = self.create_user_from_google(user_details, credentials)
         else:
             user = user_openid.user
 
@@ -78,7 +82,7 @@ class GoogleAuthBackend:
         self.update_user_details(user, details)
         UserGoogleID.objects.create(
                 googleplus_id=user_details.get('id'), user=user)
-        domain = user.email.split('@')
+        domain = user.email.split('@')[1]
         if conf.STORE_CREDENTIALS:
             if domain == 'gmail.com' and conf.STORE_GMAIL_USER_CREDENTIALS:
                 self.associate_credentials(user, credentials)
