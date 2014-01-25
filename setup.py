@@ -32,6 +32,7 @@ setup(
         ],
     packages=[
         'django_google_plus',
+        ],
     package_data={
         'django_google_plus': ['templates/google_plus/*.html'],
         },
