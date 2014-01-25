@@ -1,0 +1,14 @@
+<html>
+<head>
+  <title></title>
+
+{% if user.is_authenticated %}
+        <h2>Welcome, {% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}!</h2>
+        <div><a href="/logout/?next=/">Logout</a></div>
+{% else %}
+        <h3>You are not authenticated. Login to proceed.</h3>
+        <form action='{% url django_google_plus.views.login_begin %}' method=post>
+            <button>Login with Google+</button>
+        </form>
+{% endif %}
+</html>

@@ -5,11 +5,11 @@ from apiclient.discovery import build
 from oauth2client.django_orm import Storage
 __metaclass__ = type
 from django.contrib.auth.models import User
+import conf
 
-
-class OpenIDBackend:
+class GoogleAuthBackend:
     """A django.contrib.auth backend that authenticates the user based on
-    an OpenID response."""
+    an google response."""
 
     def get_user(self, user_id):
         try:
@@ -36,7 +36,7 @@ class OpenIDBackend:
                 googleplus_id__exact=user_details.get('id'))
         except UserGoogleID.DoesNotExist:
 #            if conf.CREATE_USERS:
-            user = self.create_user_from_openid(user_details, credentials)
+            user = self.create_user_from_google(user_details, credentials)
         else:
             user = user_openid.user
 
@@ -56,7 +56,7 @@ class OpenIDBackend:
         return dict(email=email,
                     first_name=first_name, last_name=last_name)
 
-    def create_user_from_openid(self, user_details, credentials):
+    def create_user_from_google(self, user_details, credentials):
         details = self._extract_user_details(user_details)
         nickname = details.get('nickname') or 'openiduser'
         email = details['email'] or ''
@@ -78,7 +78,12 @@ class OpenIDBackend:
         self.update_user_details(user, details)
         UserGoogleID.objects.create(
                 googleplus_id=user_details.get('id'), user=user)
-        self.associate_credentials(user, credentials)
+        domain = user.email.split('@')
+        if conf.STORE_CREDENTIALS:
+            if domain == 'gmail.com' and conf.STORE_GMAIL_USER_CREDENTIALS:
+                self.associate_credentials(user, credentials)
+            elif conf.STORE_GOOGLE_APPS_USER_CREDENTIALS:
+                self.associate_credentials(user, credentials)
         return user
 
     def associate_credentials(self, user, credentials):

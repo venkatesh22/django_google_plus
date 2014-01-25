@@ -1,0 +1,15 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+  "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>{{APPLICATION_NAME}}</title>
+</head>
+<body>
+    <h1>{{APPLICATION_NAME}}</h1>
+    <p>email : {{ request.user.email }}</p>
+    <p>username : {{ request.user.username }}</p>
+    <p>firstname : {{ request.user.first_name }}</p>
+    <p>lastname : {{ request.user.last_name }}</p>
+    <a href = "/logout/?next=/">logout</a>
+</body>
+</html>

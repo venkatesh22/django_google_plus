@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('django_google_plus.views',
     url(r'^login/$', 'login_begin', name='google-login'),

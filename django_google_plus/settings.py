@@ -15,7 +15,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'django_google_plus',                      # Or path to database file if using sqlite3.
+        'NAME': 'django_google_plus.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -100,7 +100,7 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 AUTHENTICATION_BACKENDS = (
-    'django_google_plus.auth.OpenIDBackend',
+    'django_google_plus.auth.GoogleAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
