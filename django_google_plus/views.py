@@ -36,6 +36,7 @@ def default_render_failure(request, message, status=403,
 def login_begin(request, template_name='google_plus/login.html',
                 domain=None,
                 scopes=None,
+                redirect_uri=None,
                 redirect_field_name=REDIRECT_FIELD_NAME,
                 render_failure=default_render_failure):
 
@@ -56,6 +57,8 @@ def login_begin(request, template_name='google_plus/login.html',
             flow.hd = domain
         if scopes is not None:
             flow.scope = scopes
+        if redirect_uri is not None:
+            flow.redirect_uri = redirect_uri
         auth_uri = flow.step1_get_authorize_url()
         return HttpResponseRedirect(auth_uri)
     except FlowExchangeError:
