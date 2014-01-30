@@ -71,10 +71,13 @@ def login_complete(request, redirect_field_name=REDIRECT_FIELD_NAME,
 
     redirect_to = request.session.get('next')
 
-    code = request.GET.get('code')
-    credentials = flow.step2_exchange(code)
+    try:
+        code = request.GET.get('code')
+        credentials = flow.step2_exchange(code)
+        user = authenticate(credentials_obj=credentials)
+    except FlowExchangeError:
+        return render_failure(request, 'Error')
 #    domain = credentials.id_token.get('hd', None)
-    user = authenticate(credentials_obj=credentials)
     if user is not None:
         if user.is_active:
             auth_login(request, user)
