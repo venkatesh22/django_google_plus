@@ -10,9 +10,9 @@ from oauth2client.client import FlowExchangeError, OAuth2WebServerFlow
 #    flow_from_clientsecrets
 import conf
 
-conf.GOOGLE_CLIENT_SECRET = "ExIY6cALk7pLiMgjwI5e1cLP"
-conf.GOOGLE_CLIENT_ID = "417231516741-8sc7fgf5u3df29iferkjivglltrd9jaj.apps.googleusercontent.com"
-conf.GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/openid/complete'
+#conf.GOOGLE_CLIENT_SECRET = "ExIY6cALk7pLiMgjwI5e1cLP"
+#conf.GOOGLE_CLIENT_ID = "417231516741-8sc7fgf5u3df29iferkjivglltrd9jaj.apps.googleusercontent.com"
+#conf.GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/openid/complete'
 flow = OAuth2WebServerFlow(client_id=conf.GOOGLE_CLIENT_ID,
                            client_secret=conf.GOOGLE_CLIENT_SECRET,
                            scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email',
