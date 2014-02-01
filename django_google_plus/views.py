@@ -74,6 +74,9 @@ def login_complete(request, redirect_field_name=REDIRECT_FIELD_NAME,
     if 'error' in request.GET:
         return render_failure(request, 'access_denied')
 
+    if 'code' not in request.GET:
+        return render_failure(request, 'access_denied')
+
     try:
         code = request.GET.get('code')
         credentials = flow.step2_exchange(code)
