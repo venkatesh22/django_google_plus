@@ -54,7 +54,7 @@ def login_begin(request, template_name='google_plus/login.html',
         if flow.redirect_uri is None:
             return render_failure(request, 'redirect uri required')
         if domain is not None:
-            flow.hd = domain
+            flow.params['hd'] = domain
         if scopes is not None:
             flow.scope = scopes
         if redirect_uri is not None:
