@@ -38,6 +38,7 @@ def login_begin(request, template_name='google_plus/login.html',
                 scopes=None,
                 redirect_uri=None,
                 redirect_field_name=REDIRECT_FIELD_NAME,
+                state = None,
                 render_failure=default_render_failure):
 
     redirect_to = request.REQUEST.get(redirect_field_name, '')
@@ -57,6 +58,8 @@ def login_begin(request, template_name='google_plus/login.html',
             flow.params['hd'] = domain
         if scopes is not None:
             flow.scope = scopes
+        if state is not None:
+            flow.state = state
         if redirect_uri is not None:
             flow.redirect_uri = redirect_uri
         auth_uri = flow.step1_get_authorize_url()
