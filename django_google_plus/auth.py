@@ -27,16 +27,16 @@ class GoogleAuthBackend:
 
         http = httplib2.Http()
         http = credentials.authorize(http)
-        service = build('plus', 'v1', http=http)
+        service = build('people', 'v1', http=http)
         people_resource = service.people()
-        user_details = people_resource.get(userId='me').execute()
+        user_details = people_resource.get('people/me', personFields='names,emailAddresses').execute()
         user = None
         try:
             user_openid = UserGoogleID.objects.get(
-                googleplus_id__exact=user_details.get('id'))
+                googleplus_id__exact=self._get_user_id(user_details))
         except UserGoogleID.DoesNotExist:
             if conf.CREATE_USERS:
-                email = user_details.get('emails')[0].get('value')
+                email = user_details.get('emailAddresses')[0].get('value')
                 domain = email.split('@')[1]
                 if not conf.CREATE_GMAIL_USERS and domain == "gmail.com":
                     return None
@@ -53,10 +53,14 @@ class GoogleAuthBackend:
 
         return user
 
+    def _get_user_id(self, user_details):
+        emails = user_details.get('emailAddresses')
+        return emails[0].get('metadata').get('source').get('id')
+    
     def _extract_user_details(self, user_details):
-        first_name = user_details.get('name').get('familyName')
-        last_name = user_details.get('name').get('givenName')
-        email = user_details.get('emails')[0].get('value')
+        first_name = user_details.get('names')[0].get('familyName')
+        last_name = user_details.get('names')[0].get('givenName')
+        email = user_details.get('emailAddresses')[0].get('value')
         return dict(email=email,
                     first_name=first_name, last_name=last_name)
 
