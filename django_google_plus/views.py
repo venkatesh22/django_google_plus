@@ -15,7 +15,7 @@ import conf
 #conf.GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/openid/complete'
 flow = OAuth2WebServerFlow(client_id=conf.GOOGLE_CLIENT_ID,
                            client_secret=conf.GOOGLE_CLIENT_SECRET,
-                           scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email',
+                           scope='https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
                            redirect_uri=conf.GOOGLE_REDIRECT_URI)
 #CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), 'client_secrets.json')
 #flow = flow_from_clientsecrets(
