@@ -29,7 +29,7 @@ class GoogleAuthBackend:
         http = credentials.authorize(http)
         service = build('people', 'v1', http=http)
         people_resource = service.people()
-        user_details = people_resource.get('people/me', personFields='names,emailAddresses').execute()
+        user_details = people_resource.get(resourceName='people/me', personFields='names,emailAddresses').execute()
         user = None
         try:
             user_openid = UserGoogleID.objects.get(
