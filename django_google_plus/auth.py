@@ -85,7 +85,7 @@ class GoogleAuthBackend:
         user = User.objects.create_user(username, email, password=None)
         self.update_user_details(user, details)
         UserGoogleID.objects.create(
-                googleplus_id=user_details.get('id'), user=user)
+                googleplus_id=self._get_user_id(user_details), user=user)
         domain = user.email.split('@')[1]
         if conf.STORE_CREDENTIALS:
             if domain == 'gmail.com' and conf.STORE_GMAIL_USER_CREDENTIALS:
